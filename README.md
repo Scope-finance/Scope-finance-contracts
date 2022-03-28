@@ -1,4 +1,8 @@
 # Advanced Sample Hardhat Project
+Scope finance project solidity, hardhat, ethers and typescript
+
+
+# Advanced Sample Hardhat Project
 
 This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
 
