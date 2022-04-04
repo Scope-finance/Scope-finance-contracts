@@ -5,15 +5,16 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract ScopeToken is ERC20, ERC20Burnable, Ownable {
+contract AssetContract is ERC20, ERC20Burnable, Ownable {
 
     address private platform;
     constructor(
+        string memory _name,
+        string memory _symbol,
         address _platform
-    ) ERC20("ScopeToken", "SCPT") {
+    ) ERC20(_name, _symbol) {
         platform = _platform;
     }
-
     modifier onlyPlatform(){
         require(msg.sender == platform);
         _;
@@ -26,4 +27,5 @@ contract ScopeToken is ERC20, ERC20Burnable, Ownable {
     function burn(address owner_, uint256 amount_) external onlyPlatform {
         _burn(owner_, amount_);
     }
+
 }
