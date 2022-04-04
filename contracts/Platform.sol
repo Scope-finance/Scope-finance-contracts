@@ -5,6 +5,7 @@ pragma solidity ^0.8.11;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Thetix is Ownable {
 
@@ -33,7 +34,7 @@ contract Thetix is Ownable {
         string memory assetName_,
         uint128 amount_
     ) external {
-        require(scopeTonen.allowance(msg.sender, address(this)) >= amount_);
+        require(scopeToken.allowance(msg.sender, address(this)) >= amount_);
         scopeToken.transferFrom(msg.sender, address(this), amount_);
     } 
 
