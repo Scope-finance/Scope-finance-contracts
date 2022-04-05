@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.11;
 
-import {AssetContract} from "./AssetContract.sol";
+import {StakersToken} from "./StakeToken.sol";
 import {IPlatform} from "../interfaces/IPlatform.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Factory is Ownable {
+contract StakeTokenFactory is Ownable {
 
     IPlatform private platform;
 
@@ -18,7 +18,7 @@ contract Factory is Ownable {
         string memory _name,
         string memory _symbol
     ) public pure returns (bytes memory) {
-        bytes memory bytecode = type(AssetContract).creationCode;
+        bytes memory bytecode = type(StakersToken).creationCode;
 
         return abi.encodePacked(bytecode, abi.encode(_name, _symbol));
     }
@@ -45,7 +45,7 @@ contract Factory is Ownable {
 
         assetAddress[_name] = addr;
 
-        platform.addAsset(_name, addr);
+        platform.addStakeToken(_name, addr);
         emit Deployed(_name, addr);
     }
 }

@@ -9,9 +9,7 @@ contract ScopeToken is ERC20, ERC20Burnable, Ownable {
 
     address private platform;
     constructor(
-        address _platform
     ) ERC20("ScopeToken", "SCPT") {
-        platform = _platform;
     }
 
     modifier onlyPlatform(){
@@ -19,6 +17,9 @@ contract ScopeToken is ERC20, ERC20Burnable, Ownable {
         _;
     }
 
+    function addPlatform(address platform_) external onlyOwner {
+        platform = platform_;
+    }
     function mint(address to, uint256 amount) public onlyPlatform {
         _mint(to, amount);
     }

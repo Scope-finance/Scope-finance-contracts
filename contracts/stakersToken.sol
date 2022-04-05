@@ -10,10 +10,9 @@ contract StakersToken is ERC20, ERC20Burnable, Ownable, ERC20Snapshot {
 
     address private platform;
     constructor(
-        address _platform
-    ) ERC20("Stakers Token", "STKTN") {
-        platform = _platform;
-    }
+        string memory name,
+        string memory symbol
+    ) ERC20(name, symbol) {}
 
 
     modifier onlyPlatform(){
@@ -24,6 +23,9 @@ contract StakersToken is ERC20, ERC20Burnable, Ownable, ERC20Snapshot {
         _snapshot();
     }
 
+     function addPlatform(address platform_) external onlyOwner {
+        platform = platform_;
+    }
     function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
