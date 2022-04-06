@@ -8,6 +8,8 @@ interface Token {
     /// @return balance the balance
     function balanceOf(address _owner) external view returns (uint256 balance);
 
+    function totalSupply() external view returns(uint256);
+
     /// @notice send `_value` token to `_to` from `msg.sender`
     /// @param _to The address of the recipient
     /// @param _value The amount of token to be transferred

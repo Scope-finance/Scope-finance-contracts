@@ -37,14 +37,15 @@ contract Platform is Ownable {
 
     mapping (string => Token) public assetAddress;
 
-    mapping(string => mapping(uint256 => uint256)) public assetRoundRewards;
+    mapping(string => uint256) public assetRewards;
 
-    mapping(string => uint) private assetRound;
 
     struct StakerInfor{
         bool active;
         uint256 amount;
         int256 startPrice;
+        uint256 startStake;//the balance of staked tokens
+        uint256 startAssetValue; //the  total value of the asset in circulation
     }
     event AssetBought(string indexed name_, address buyer);
 
@@ -117,7 +118,7 @@ contract Platform is Ownable {
             getTotalMintable(assetName_, amount)
         );
         assetAddress[assetName_].mint(msg.sender, assetMintable);
-        assetRoundRewards[assetName_][assetRound[assetName_]] += transaction;
+        assetRewards[assetName_] += transaction;
         amountDeposited[msg.sender][assetName_] += amount;
 
     } 
@@ -131,15 +132,20 @@ contract Platform is Ownable {
         address staker,
         string memory asset_
     ) public view returns(uint256) {
-        int256 currentPrice = getLatestPrice(asset_);
         int256 startPrice = addressAssetTotalStaked[msg.sender][asset_].startPrice;
+        //uint256 startFloat = addressAssetTotalStaked[staker][asset_].startStake;
+        uint256 startAssetValue = addressAssetTotalStaked[staker][asset_].startAssetValue;
+        int256 currentPrice = getLatestPrice(asset_);
+        //uint256 currentFloat = assetTotalStaked[asset_];
+        int256 currentAssetvalue = currentPrice * int256(assetAddress[asset_].totalSupply());
+        int256 change = ((int256(startAssetValue) - currentAssetvalue) * 100) / int256(startAssetValue);
+        return (
+            addressAssetTotalStaked[staker][asset_].amount * uint256(change)
+        );
+
 
     }
 
-
-    function getSopesMintable(uint256 assetAmount) private view returns (uint256) {
-
-    }
     function checkOut(string memory asset_, uint256 amount_) external {
         require(assetAddress[asset_].balanceOf(msg.sender) >= amount_);
         assetAddress[asset_].transferFrom(
@@ -164,12 +170,12 @@ contract Platform is Ownable {
     ) public view returns( uint256){
         return (
             addressAssetTotalStaked[staker][asset_].amount * (
-                assetRewards(asset_) - userRewardPerAsset[staker][asset_]
+                assetReward(asset_) - userRewardPerAsset[staker][asset_]
             ) / 1e18
         ) + rewards[staker][asset_] ;
     }
 
-    function assetRewards(string memory asset_) public view returns(uint256) {
+    function assetReward(string memory asset_) public view returns(uint256) {
         if (assetTotalStaked[asset_] == 0) {
             return 0;
         }
@@ -189,7 +195,7 @@ contract Platform is Ownable {
         string memory asset_,
         address staker_
     ) {
-        rewardpertoken[asset_] = assetRewards(asset_);
+        rewardpertoken[asset_] = assetReward(asset_);
         lastUpdate[asset_] = block.timestamp;
         rewards[staker_][asset_] = earnings(asset_, staker_);
         userRewardPerAsset[staker_][asset_] = rewardpertoken[asset_];
@@ -215,7 +221,9 @@ contract Platform is Ownable {
         addressAssetTotalStaked[msg.sender][name_] = StakerInfor(
             true,
             totalAmount,
-            getLatestPrice(name_)
+            getLatestPrice(name_),
+            assetTotalStaked[name_],
+            (assetAddress[name_].totalSupply() * uint256(getLatestPrice(name_)))
         );
     }
     function unstake(
@@ -223,9 +231,9 @@ contract Platform is Ownable {
         uint256 amount
     ) external updateReturns(asset_, msg.sender) {
         require(
-            getAmountWithdrawable(
-                asset_,
-                msg.sender
+            getStakerBalance(
+                msg.sender,
+                asset_
             ) >= amount
         );
         uint transaction = (amount * 99)/100;
@@ -235,17 +243,31 @@ contract Platform is Ownable {
         scopeToken.transfer(msg.sender, scopes);
     }
 
-    function getAmountWithdrawable(
-        string memory asset_,
-        address staker_
-    ) public view returns (uint256) {
-
-    } 
     function claimRewards(string memory asset_) external updateReturns(asset_, msg.sender) {
         uint256 reward = rewards[msg.sender][asset_];
         rewards[msg.sender][asset_] = 0;
         stakersToken[asset_].mint(msg.sender, reward);
     }
 
-    
+    function exchangeStakeToken(
+        string memory asset_,
+        uint256 amount_
+    ) public {
+        require(stakersToken[asset_].allowance(msg.sender, address(this)) >= amount_);
+        uint256 totalTransactions = assetRewards[asset_];
+        uint256 rewardTokenSupply = stakersToken[asset_].totalSupply();
+        uint256 amountTransferable = ((totalTransactions * amount_)/rewardTokenSupply); 
+        stakersToken[asset_].burn(msg.sender, amount_);
+        assetRewards[asset_] -= amountTransferable;
+        scopeToken.transfer(msg.sender, amountTransferable);
+    }
+
+    function getAssetRatio(string memory asset_) public view returns (int256) {
+        int256 assetValue = (
+            int256(stakersToken[asset_].totalSupply()) * getLatestPrice(asset_)
+        );
+
+        int256 totalStake = int256(assetTotalStaked[asset_]);
+        return totalStake/assetValue;
+    }
 }
