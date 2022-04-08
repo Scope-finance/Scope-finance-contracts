@@ -23,9 +23,13 @@ contract Factory is Ownable {
         return abi.encodePacked(bytecode, abi.encode(_name, _symbol));
     }
 
-    function addPlatform(IPlatform platform_) external onlyOwner {
-        platform = platform_;
+
+/*
+    function addPlatform(address platform_) external onlyOwner {
+        platform = IPlatform(platform_);
     }
+*/
+
 
     function deploy(bytes memory bytecode, uint _salt, string memory _name) public payable {
         address addr;
