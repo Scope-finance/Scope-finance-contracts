@@ -8,8 +8,8 @@ import { ethers } from "hardhat";
 async function main() {
   // We get the contract to deploy
   const [signer] = await ethers.getSigners();
-  const ScopeTixToken = "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8"
-  const MockAggregator = "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d"
+  const ScopeTixToken = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+  const MockAggregator = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   const ScopeTixTokenInteract = await ethers.getContractAt("ScopeTix",ScopeTixToken)
   const Thetix = await ethers.getContractFactory("Thetix");
   const deployThetix = await Thetix.deploy(ScopeTixToken);

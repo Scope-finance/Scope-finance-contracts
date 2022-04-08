@@ -15,12 +15,14 @@ async function main() {
 
   // We get the contract to deploy
   const [signer] = await ethers.getSigners();
-  const ScopeTix = await ethers.getContractFactory("ScopeTix");
+  const ScopeTix = await ethers.getContractFactory("ScopeToken");
   const deployScopeTix = await ScopeTix.deploy();
 
   await deployScopeTix.deployed();
 
   console.log("ScopeTix token deployed to:", deployScopeTix.address);
+
+  await deployScopeTix.addPlatform(signer.address);
 
   await deployScopeTix.mint(signer.address,10000*10**8);
 }

@@ -51,7 +51,6 @@ contract Platform is Ownable {
 
     event Assetbacked(string indexed name_, address staker);
 
-    
     constructor(
         address sopeToken_,
         address factory_, //asset factory address

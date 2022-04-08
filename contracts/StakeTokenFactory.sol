@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.11;
 
-import {StakersToken} from "./StakeToken.sol";
+import {StakersToken} from "./stakersToken.sol";
 import {IPlatform} from "../interfaces/IPlatform.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 

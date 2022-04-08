@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Factory is Ownable {
 
     IPlatform private platform;
-
+ 
     mapping(string => address) public assetAddress; 
 
     event Deployed(string indexed _name, address addr);
@@ -23,8 +23,8 @@ contract Factory is Ownable {
         return abi.encodePacked(bytecode, abi.encode(_name, _symbol));
     }
 
-    function addPlatform(IPlatform platform_) external onlyOwner {
-        platform = platform_;
+    function addPlatform(address platform_) external onlyOwner {
+        platform = IPlatform(platform_);
     }
 
     function deploy(bytes memory bytecode, uint _salt, string memory _name) public payable {
