@@ -110,6 +110,7 @@ contract Platform is Ownable {
         uint256 amount_
     ) external {
         require(scopeToken.allowance(msg.sender, address(this)) >= amount_);
+        require(getAssetRatio(assetName_) >= 3);
         uint256 transaction = (amount_ * 99)/100;
         uint256 amount = amount_ - transaction;
         scopeToken.transferFrom(msg.sender, address(this), amount_);
@@ -154,11 +155,15 @@ contract Platform is Ownable {
             amount_
         );
         uint mints = uint256(getLatestPrice(asset_)) * amount_;
-        scopeToken.mint(msg.sender, mints);
+        scopeToken.transfer(msg.sender, mints);
         uint256 amountde = amountDeposited[msg.sender][asset_];
+
         if (amountde < mints) {
             uint256 stakeEaten = mints - amountde;
             assetTotalStaked[asset_] -= stakeEaten;
+        } else {
+            uint256 growth = mints - amountde;
+            assetTotalStaked[asset_] += growth;
         }
         
 
@@ -167,7 +172,7 @@ contract Platform is Ownable {
     function earnings(
         string memory asset_,
         address staker
-    ) public view returns( uint256){
+    ) private view returns( uint256){
         return (
             addressAssetTotalStaked[staker][asset_].amount * (
                 assetReward(asset_) - userRewardPerAsset[staker][asset_]
@@ -175,7 +180,7 @@ contract Platform is Ownable {
         ) + rewards[staker][asset_] ;
     }
 
-    function assetReward(string memory asset_) public view returns(uint256) {
+    function assetReward(string memory asset_) private view returns(uint256) {
         if (assetTotalStaked[asset_] == 0) {
             return 0;
         }
@@ -225,7 +230,10 @@ contract Platform is Ownable {
             assetTotalStaked[name_],
             (assetAddress[name_].totalSupply() * uint256(getLatestPrice(name_)))
         );
+        stakersToken[name_].mint(msg.sender, (scopes/3));
     }
+
+
     function unstake(
         string memory asset_,
         uint256 amount
@@ -236,9 +244,10 @@ contract Platform is Ownable {
                 asset_
             ) >= amount
         );
-        uint transaction = (amount * 99)/100;
-        uint burnables = amount - transaction;
-        assetAddress[asset_].burn(msg.sender, burnables);
+        uint amount_ = (amount * 3);
+        uint transaction = (amount_ * 99)/100;
+        uint burnables = amount_ - transaction;
+        stakersToken[asset_].burn(msg.sender, burnables);
         uint scopes = (uint256(getLatestPrice(asset_)) * burnables);
         scopeToken.transfer(msg.sender, scopes);
     }
