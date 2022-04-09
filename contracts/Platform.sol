@@ -96,22 +96,29 @@ contract Platform is Ownable {
     }
 
     function getTotalMintable(string memory asset_, uint256 scopes) private view returns (uint) {
-        require(scopes >= 100 ether, "low sopes");
+        require(scopes >= 99 ether, "low scopes");
         int price = getLatestPrice(asset_);
         return scopes/uint(price);
 
     }
 
     //checks if the buyer already has the asset
-    function checkBuyerExists(address buyer, string memory asset_) private view returns(bool) {
-        return assetAddress[asset_].balanceOf(buyer) > 0;
-    }
     function buyAsset(
         string memory assetName_,
         uint256 amount_
     ) external {
-        require(scopeToken.allowance(msg.sender, address(this)) >= amount_);
-        require(getAssetRatio(assetName_) >= 3);
+        require(
+            amount_ >= 100 ether,
+            "amount low"
+        );
+        require(
+            scopeToken.allowance(msg.sender, address(this)) >= amount_, 
+            "give allowance"
+        );
+        require(
+            getAssetRatio(assetName_) >= 3,
+            "current ratio < 0"
+        );
         uint256 transaction = (amount_ * 99)/100;
         uint256 amount = amount_ - transaction;
         scopeToken.transferFrom(msg.sender, address(this), amount_);
@@ -148,8 +155,14 @@ contract Platform is Ownable {
 
     }
 
-    function checkOut(string memory asset_, uint256 amount_) external {
-        require(assetAddress[asset_].balanceOf(msg.sender) >= amount_);
+    function checkOut(
+        string memory asset_,
+        uint256 amount_
+    ) external {
+        require(
+            assetAddress[asset_].balanceOf(msg.sender) >= amount_,
+            "amount"
+        );
         assetAddress[asset_].transferFrom(
             msg.sender,
             address(this),
@@ -181,7 +194,9 @@ contract Platform is Ownable {
         ) + rewards[staker][asset_] ;
     }
 
-    function assetReward(string memory asset_) private view returns(uint256) {
+    function assetReward(
+        string memory asset_
+    ) private view returns(uint256) {
         if (assetTotalStaked[asset_] == 0) {
             return 0;
         }
@@ -253,7 +268,9 @@ contract Platform is Ownable {
         scopeToken.transfer(msg.sender, scopes);
     }
 
-    function claimRewards(string memory asset_) external updateReturns(asset_, msg.sender) {
+    function claimRewards(
+        string memory asset_
+    ) external updateReturns(asset_, msg.sender) {
         uint256 reward = rewards[msg.sender][asset_];
         rewards[msg.sender][asset_] = 0;
         stakersToken[asset_].mint(msg.sender, reward);
@@ -263,7 +280,10 @@ contract Platform is Ownable {
         string memory asset_,
         uint256 amount_
     ) public {
-        require(stakersToken[asset_].allowance(msg.sender, address(this)) >= amount_);
+        require(
+            stakersToken[asset_].allowance(msg.sender, address(this)) >= amount_,
+            "allowance"
+        );
         uint256 totalTransactions = assetRewards[asset_];
         uint256 rewardTokenSupply = stakersToken[asset_].totalSupply();
         uint256 amountTransferable = ((totalTransactions * amount_)/rewardTokenSupply); 

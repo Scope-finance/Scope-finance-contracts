@@ -26,7 +26,8 @@ contract StakersToken is ERC20, ERC20Burnable, Ownable, ERC20Snapshot {
      function addPlatform(address platform_) external onlyOwner {
         platform = platform_;
     }
-    function mint(address to, uint256 amount) public onlyPlatform {
+
+    function mint(address to, uint256 amount) external onlyPlatform {
         _mint(to, amount);
     }
 
