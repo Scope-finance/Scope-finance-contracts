@@ -6,6 +6,8 @@ import {StakersToken} from "./StakeToken.sol";
 import {IPlatform} from "../interfaces/IPlatform.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import {IAsset} from "../interfaces/IAssets.sol";
+
 contract StakeTokenFactory is Ownable {
 
     IPlatform private platform;
@@ -22,19 +24,24 @@ contract StakeTokenFactory is Ownable {
 
         return abi.encodePacked(bytecode, abi.encode(_name, _symbol));
     }
-/*
-    function addPlatform(address platform_) external onlyOwner {
+
+
+    function addPlatform(IPlatform platform_) external onlyOwner {
         platform = platform_;
     }
-*/
-    function deploy(bytes memory bytecode, uint _salt, string memory _name) public payable {
+
+    function deploy(uint _salt, string memory _name, string memory symbol) public payable {
+
+        bytes memory bytecode = type(StakersToken).creationCode;
+
+        bytes memory bytecode_ = abi.encodePacked(bytecode, abi.encode(_name, symbol));        
         address addr;
 
         assembly {
             addr := create2(
                 callvalue(),
-                add(bytecode, 0x20),
-                mload(bytecode),
+                add(bytecode_, 0x20),
+                mload(bytecode_),
                 _salt 
             )
 
@@ -46,6 +53,7 @@ contract StakeTokenFactory is Ownable {
         assetAddress[_name] = addr;
 
         platform.addStakeToken(_name, addr);
+        IAsset(addr).addPlatform(address(platform));
         emit Deployed(_name, addr);
     }
 }

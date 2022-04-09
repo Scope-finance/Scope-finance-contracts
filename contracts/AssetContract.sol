@@ -10,16 +10,18 @@ contract AssetContract is ERC20, ERC20Burnable, Ownable {
     address private platform;
     constructor(
         string memory _name,
-        string memory _symbol,
-        address _platform
+        string memory _symbol
     ) ERC20(_name, _symbol) {
-        platform = _platform;
     }
     modifier onlyPlatform(){
         require(msg.sender == platform);
         _;
     }
 
+     function addPlatform(address platform_) external onlyOwner {
+        platform = platform_;
+    }
+    
     function mint(address to, uint256 amount) public onlyPlatform {
         _mint(to, amount);
     }

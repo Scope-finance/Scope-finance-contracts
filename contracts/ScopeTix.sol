@@ -20,7 +20,7 @@ contract ScopeToken is ERC20, ERC20Burnable, Ownable {
     function addPlatform(address platform_) external onlyOwner {
         platform = platform_;
     }
-    function mint(address to, uint256 amount) public onlyPlatform {
+    function mint(address to, uint256 amount) public onlyOwner {
         _mint(to, amount);
     }
 
