@@ -47,6 +47,7 @@ contract Platform is Ownable {
         uint256 startStake;//the balance of staked tokens
         uint256 startAssetValue; //the  total value of the asset in circulation
     }
+
     event AssetBought(string indexed name_, address buyer);
 
     event Assetbacked(string indexed name_, address staker);
@@ -131,7 +132,7 @@ contract Platform is Ownable {
         address staker,
         string memory asset_
     ) public view returns(uint256) {
-        int256 startPrice = addressAssetTotalStaked[msg.sender][asset_].startPrice;
+        //int256 startPrice = addressAssetTotalStaked[msg.sender][asset_].startPrice;
         //uint256 startFloat = addressAssetTotalStaked[staker][asset_].startStake;
         uint256 startAssetValue = addressAssetTotalStaked[staker][asset_].startAssetValue;
         int256 currentPrice = getLatestPrice(asset_);
@@ -139,7 +140,7 @@ contract Platform is Ownable {
         int256 currentAssetvalue = currentPrice * int256(assetAddress[asset_].totalSupply());
         int256 change = ((int256(startAssetValue) - currentAssetvalue) * 100) / int256(startAssetValue);
         return (
-            addressAssetTotalStaked[staker][asset_].amount * uint256(change)
+            (addressAssetTotalStaked[staker][asset_].amount * uint256(change))/100
         );
 
 
