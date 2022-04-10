@@ -317,4 +317,8 @@ contract Platform is Ownable {
         int256 totalStake = int256(assetTotalStaked[asset_]);
         return totalStake/assetValue;
     }
+
+        // function balanceOf(address _sender) external returns(uint){
+        //     return 
+        // }
 }
