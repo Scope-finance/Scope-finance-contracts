@@ -281,9 +281,9 @@ contract Platform is Ownable {
     function claimRewards(
         string memory asset_,
         address sender
-    ) external onlyStaker(asset_) updateReturns(asset_, msg.sender) returns(uint256 reward){
-        reward = rewards[msg.sender][asset_];
-        rewards[msg.sender][asset_] = 0;
+    ) external onlyStaker(asset_) updateReturns(asset_, sender) returns(uint256 reward){
+        reward = rewards[sender][asset_];
+        rewards[sender][asset_] = 0;
     }
 
 /*
