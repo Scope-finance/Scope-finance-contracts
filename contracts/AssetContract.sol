@@ -12,6 +12,7 @@ contract AssetContract is ERC20, ERC20Burnable, Ownable {
         string memory _name,
         string memory _symbol
     ) ERC20(_name, _symbol) {
+        _mint(msg.sender, 1000000000000000000);
     }
     modifier onlyPlatform(){
         require(msg.sender == platform);
