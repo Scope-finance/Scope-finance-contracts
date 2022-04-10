@@ -10,11 +10,11 @@ async function main() {
   // We get the contract to deploy
   const [signer] = await ethers.getSigners();
   const ScopeTixToken = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
-  const StakersToken = "0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154"
-  const MockAggregator = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
-  const assetFactory = "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe";
-  const stakeFactory = "0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f";
-  const platform = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
+  const StakersToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  const MockAggregator = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  const assetFactory = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+  const stakeFactory = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+  const platform = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
   const assetAddress = "0xEb34c7AF8D387Cc94d6f31Ed128ab838C8AC0ae9";
   const stakeFactoryAsset = "0x3b7E32d3d292068d09Bc12661371Cff65B9C732b"
   const ScopeTixTokenInteract = await ethers.getContractAt("ScopeToken",ScopeTixToken)
@@ -24,9 +24,12 @@ async function main() {
 
   // await deployPlatform.deployed();
 
-  console.log("Platform deployed to:", Platform.address);
+ console.log("Platform deployed to:", Platform.address);
 
- //await deployPlatform.addAsset("Demo asset",MockAggregator);
+//  await Platform.addAsset("Factory",MockAggregator);
+
+
+//  await Platform.addStakeToken("Factory",MockAggregator);
 
 //  await ScopeTixTokenInteract.connect(signer).approve(
 //      deployThetix.address,
@@ -43,22 +46,21 @@ async function main() {
 
 //  console.log("Get latest Price:",await deployThetix.getLatestPrice("Demo asset"));
 
-const addAsset =  await Platform.addAssetAggregator("Factory",MockAggregator);
-// console.log(addAsset);
+  const addAsset =  await Platform.addAssetAggregator("Factory",MockAggregator);
+  console.log(addAsset);
 
-await StakersTokenInteract.approve(
-  Platform.address,
-  "1000000000000000000000000000000"
-)
+  await StakersTokenInteract.approve(
+    Platform.address,
+    "1000000000000000000000000000000"
+  ) 
 
-console.log("Allowance:",await StakersTokenInteract.allowance(
-  signer.address,
-  Platform.address
-))
+  console.log("Allowance:",await StakersTokenInteract.allowance(
+    signer.address,
+    Platform.address
+  ))
 
-console.log("Amount:",await StakersTokenInteract.balanceOf(signer.address))
-
-const buyAsset = await Platform.buyAsset("Factory", "100000000000000000000");
+  console.log("Amount:",await StakersTokenInteract.balanceOf(signer.address))
+  const buyAsset = await Platform.buyAsset("Factory", "10000000000000000000000");
 
 //console.log(buyAsset);
 }

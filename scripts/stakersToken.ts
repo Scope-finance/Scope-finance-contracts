@@ -15,17 +15,17 @@ async function main() {
 
   // We get the contract to deploy
   const [signer] = await ethers.getSigners();
-  const StakersToken = "0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154"
-  const StakersTokens = await ethers.getContractAt("StakersToken",StakersToken);
+  const StakersToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  const StakersTokens = await ethers.getContractAt("StakersToken", StakersToken);
 //   const deployStakersTokens = await StakersTokens.deploy("StakersToken", "STR");
 
 //   await deployStakersTokens.deployed();
 
-  console.log("StakersTokens token deployed to:", StakersTokens.address);
+  //console.log("StakersTokens token deployed to:", deployStakersTokens.address);
 
-  await StakersTokens.addPlatform(signer.address);
+await StakersTokens.addPlatform(signer.address);
 
-  await StakersTokens.mint(signer.address,"1000000000000000000000");
+await StakersTokens.mint(signer.address,"1000000000000000000000");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

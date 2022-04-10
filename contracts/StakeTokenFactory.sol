@@ -6,7 +6,7 @@ import {StakersToken} from "./stakersToken.sol";
 import {IPlatform} from "../interfaces/IPlatform.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import {IAsset} from "../interfaces/IAssets.sol";
+import {IAsset} from "../interfaces/IAsset.sol";
 
 contract StakeTokenFactory is Ownable {
 

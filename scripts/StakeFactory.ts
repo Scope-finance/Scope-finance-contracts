@@ -9,8 +9,8 @@ async function main() {
     // await hre.run('compile');
   
     // We get the contract to deploy
-    const stakeFactory = "0x5081a39b8A5f0E35a8D959395a630b68B74Dd30f";
-    const platform = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
+    const stakeFactory = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+    const platform = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
   
     const StakeFactory = await ethers.getContractAt("StakeTokenFactory",stakeFactory);
     // const deploystakeFactory = await StakeFactory.deploy();
@@ -19,7 +19,7 @@ async function main() {
 
     console.log("StakeFactory deployed to:", StakeFactory.address);
 
-    const byteCode = await StakeFactory.getBytecode("Factory", "fct");
+    //const byteCode = await StakeFactory.getBytecode("Factory", "fct");
 
     await StakeFactory.addPlatform(platform);
 
@@ -27,7 +27,7 @@ async function main() {
 
     const nonce = await ethers.provider.getTransactionCount(signer.address) + 1;
 
-    await StakeFactory.deploy(byteCode,nonce,"Factory");
+    await StakeFactory.deploy(nonce,"Factory","fct");
 
     console.log("StakeFactory asset adderss",await StakeFactory.assetAddress("Factory"));
     

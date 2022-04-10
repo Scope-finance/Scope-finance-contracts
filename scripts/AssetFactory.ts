@@ -9,8 +9,8 @@ async function main() {
     // await hre.run('compile');
   
     // We get the contract to deploy
-    const assetFactory = "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe";
-    const platform = "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d";
+    const assetFactory = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+    const platform = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
 
     const AssetFactory = await ethers.getContractAt("Factory",assetFactory);
     // const deployAssetFactory = await AssetFactory.deploy();
@@ -37,7 +37,7 @@ async function main() {
     
     await AssetFactory.addPlatform(platform);
 
-    await AssetFactory.deploy(byteCode, nonce,"Factory")  
+    await AssetFactory.deploy(nonce,"Factory","fct")  
     console.log("assetAddress", await AssetFactory.assetAddress("Factory"));  
     //await deployAssetFactory.addPlatform()
     //await deployAssetFactory. 
