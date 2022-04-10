@@ -111,7 +111,7 @@ contract Platform is Ownable {
         require(msg.sender == assetAddress[asset_]);
         _;
     }
-    //checks if the buyer already has the asset
+
     function buyAsset(
         string memory assetName_,
         uint256 amount_,
