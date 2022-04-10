@@ -41,7 +41,6 @@ contract Platform is Ownable {
 
 
     struct StakerInfor{
-        bool active;
         uint256 amount;
         int256 startPrice;
         uint256 startStake;//the balance of staked tokens
@@ -240,13 +239,11 @@ contract Platform is Ownable {
         uint totalAmount = addressAssetTotalStaked[msg.sender][name_].amount + scopes;
         assetTotalStaked[name_] += scopes;
         addressAssetTotalStaked[msg.sender][name_] = StakerInfor(
-            true,
             totalAmount,
             getLatestPrice(name_),
             assetTotalStaked[name_],
             (assetAddress[name_].totalSupply() * uint256(getLatestPrice(name_)))
         );
-        stakersToken[name_].mint(msg.sender, (scopes/3));
     }
 
 
@@ -260,11 +257,10 @@ contract Platform is Ownable {
                 asset_
             ) >= amount
         );
-        uint amount_ = (amount * 3);
-        uint transaction = (amount_ * 99)/100;
-        uint burnables = amount_ - transaction;
-        stakersToken[asset_].burn(msg.sender, burnables);
+        uint transaction = (amount * 99)/100;
+        uint burnables = amount - transaction;
         uint scopes = (uint256(getLatestPrice(asset_)) * burnables);
+        addressAssetTotalStaked[msg.sender][asset_].amount -= amount;
         scopeToken.transfer(msg.sender, scopes);
     }
 
@@ -275,7 +271,10 @@ contract Platform is Ownable {
         rewards[msg.sender][asset_] = 0;
         stakersToken[asset_].mint(msg.sender, reward);
     }
-
+/*
+    This function burns the asset's stake token rewards
+    and reduces the its backing by the ration of the asset burned to its totalSupply
+*/
     function exchangeStakeToken(
         string memory asset_,
         uint256 amount_
