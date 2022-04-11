@@ -110,10 +110,6 @@ contract Platform is Ownable {
         require(msg.sender == assetAddress[asset_]);
         _;
     }
-    //checks if the buyer already has the asset
-    function checkBuyerExists(address buyer, string memory asset_) private view returns(bool) {
-        return assetAddress[asset_].balanceOf(buyer) > 0;
-    }
     function buyAsset(
         string memory assetName_,
         uint256 amount_,

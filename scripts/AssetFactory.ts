@@ -9,8 +9,8 @@ async function main() {
     // await hre.run('compile');
   
     // We get the contract to deploy
-    const assetFactory = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
-    const platform = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
+    const assetFactory = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
+    const platform = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
 
     const AssetFactory = await ethers.getContractAt("Factory",assetFactory);
     // const deployAssetFactory = await AssetFactory.deploy();
@@ -20,25 +20,25 @@ async function main() {
   
 
     console.log("AssetFactory deployed to:", AssetFactory.address);
-    const byteCode = await AssetFactory.getBytecode("Factory","fct")
+    //const byteCode = await AssetFactory.getBytecode("Factory","fct")
 
     // console.log(byteCode);
 
     const[signer] = await ethers.getSigners()
 
-    //await ethers.provider.transaction.nonce
+    // //await ethers.provider.transaction.nonce
   
     const nonce = await ethers.provider.getTransactionCount(signer.address) + 1;
 
     console.log("Nonce:",nonce);
 
-    console.log("assetAddress", await AssetFactory.assetAddress("Factory")
-     );
+    // console.log("assetAddress", await AssetFactory.assetAddress("Factory")
+    //  );
     
     await AssetFactory.addPlatform(platform);
 
-    await AssetFactory.deploy(nonce,"Factory","fct")  
-    console.log("assetAddress", await AssetFactory.assetAddress("Factory"));  
+    await AssetFactory.deploy(nonce,"Gold","xau")  
+    console.log("assetAddress", await AssetFactory.assetAddress("Gold"));  
     //await deployAssetFactory.addPlatform()
     //await deployAssetFactory. 
   }

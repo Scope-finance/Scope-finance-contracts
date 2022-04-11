@@ -14,18 +14,18 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const [signer] = await ethers.getSigners();
-  const ScopeTixToken = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
-  const ScopeTix = await ethers.getContractAt("ScopeToken",ScopeTixToken);
+  const [signer,signer2] = await ethers.getSigners();
+  
+  const scopeTix = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  const ScopeTix = await ethers.getContractAt("ScopeToken",scopeTix);
   // const deployScopeTix = await ScopeTix.deploy();
 
   // await deployScopeTix.deployed();
 
   console.log("ScopeTix token deployed to:", ScopeTix.address);
 
-  await ScopeTix.addPlatform(signer.address);
 
-  await ScopeTix.mint(signer.address,"1000000000000000000000");
+  await ScopeTix.mint(signer2.address,"1000000000000000000000");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
