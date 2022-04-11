@@ -26,6 +26,7 @@ async function main() {
 
 
   await ScopeTix.mint(signer2.address,"1000000000000000000000");
+  await ScopeTix.mint(signer.address,"1000000000000000000000");
 }
 
 // We recommend this pattern to be able to use async/await everywhere

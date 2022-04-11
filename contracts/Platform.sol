@@ -62,10 +62,6 @@ contract Platform is Ownable {
         factory = factory_;
         stakefactory =stakefactory_;
     }
-
-    modifier updateRatio(string memory name) {
-        _;
-    }
     
     //Adds a new asset to the platform
     function addAsset(
@@ -83,6 +79,7 @@ contract Platform is Ownable {
     function getNumberOfAssets() public view returns (uint256) {
         return assets.length;
     }
+
     function addStakeToken(string memory asset_, address token_) external {
         require(
             msg.sender == stakefactory,
@@ -110,6 +107,7 @@ contract Platform is Ownable {
         require(msg.sender == assetAddress[asset_]);
         _;
     }
+    //checks if the buyer already has the asset
     function buyAsset(
         string memory assetName_,
         uint256 amount_,
@@ -127,7 +125,7 @@ contract Platform is Ownable {
             getAssetRatio(assetName_) >= 3,
             "current ratio < 0"
         );
-        uint256 transaction = (amount_ * 99)/100;
+        uint256 transaction = (amount_ * 1)/100;
         uint256 amount = amount_ - transaction;
         scopeToken.transferFrom(sender_, address(this), amount_);
         assetRewards[assetName_] += transaction;
@@ -263,7 +261,7 @@ contract Platform is Ownable {
                 asset_
             ) >= amount
         );
-        uint transaction = (amount * 99)/100;
+        uint transaction = (amount * 1)/100;
         uint burnables = amount - transaction;
         uint scopes = (uint256(getLatestPrice(asset_)) * burnables);
         addressAssetTotalStaked[msg.sender][asset_].amount -= amount;

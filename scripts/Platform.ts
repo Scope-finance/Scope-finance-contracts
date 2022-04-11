@@ -12,9 +12,9 @@ async function main() {
   const ScopeTixToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
   const StakersToken = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
   const MockAggregator = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
-  const assetFactory = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
-  const stakeFactory = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
-  const platform = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+  const assetFactory = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+  const stakeFactory = "0x0165878A594ca255338adfa4d48449f69242Eb8F";
+  const platform = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853";
   const assetAddress = "0xEb34c7AF8D387Cc94d6f31Ed128ab838C8AC0ae9";
   const stakeFactoryAsset = "0x3b7E32d3d292068d09Bc12661371Cff65B9C732b"
   const ScopeTixTokenInteract = await ethers.getContractAt("ScopeToken",ScopeTixToken)
@@ -26,17 +26,17 @@ async function main() {
 
   console.log("Platform deployed to:", Platform.address);
 
-  //  await Platform.addAsset("Factory",MockAggregator);
+  await Platform.addAsset("Factory",MockAggregator);
 
 
-  await Platform.addAssetAggregator("Factory",MockAggregator);
+  // await Platform.addAssetAggregator("Factory",MockAggregator);
   
-  await ScopeTixTokenInteract.connect(signer2).approve(
-    Platform.address,
-    "10000000000000000000000000000000"
-  )
+  // await ScopeTixTokenInteract.connect(signer2).approve(
+  //   Platform.address,
+  //   "10000000000000000000000000000000"
+  // )
   
-  await Platform.connect(signer2).stakeOnAsset("Gold", "100000000000000000000")
+  // await Platform.connect(signer2).stakeOnAsset("Gold", "100000000000000000000")
 
   // console.log("view allowance:", await ScopeTixTokenInteract.allowance(signer2.address, Platform.address));
 
