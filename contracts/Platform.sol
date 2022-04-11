@@ -53,6 +53,7 @@ contract Platform is Ownable {
 
     event Assetbacked(string indexed name_, address staker);
 
+    
     constructor(
         address sopeToken_,
         address factory_, //asset factory address
@@ -164,16 +165,6 @@ contract Platform is Ownable {
         uint256 amount_,
         address sender_
     ) external onlyAssets(asset_) {
-        address token = assetAddress[asset_];
-        require(
-            Token(token).balanceOf(sender_) >= amount_,
-            "amount"
-        );
-        Token(token).transferFrom(
-            sender_,
-            address(this),
-            amount_
-        );
         uint mints = uint256(getLatestPrice(asset_)) * amount_;
         scopeToken.transfer(sender_, mints);
         uint256 amountde = amountDeposited[sender_][asset_];
@@ -198,7 +189,9 @@ contract Platform is Ownable {
         ) + rewards[staker][asset_] ;
     }
 
-    function assetReward(string memory asset_) private view returns(uint256) {
+    function assetReward(
+        string memory asset_
+    ) private view returns(uint256) {
         if (assetTotalStaked[asset_] == 0) {
             return 0;
         }
@@ -290,14 +283,9 @@ contract Platform is Ownable {
         address sender
     ) external onlyStaker(asset_) {
         address token = stakersToken[asset_];
-        //require(
-        //    Token(token).allowance(sender, address(this)) >= amount_,
-        //    "allowance"
-        //);
         uint256 totalTransactions = assetRewards[asset_];
         uint256 rewardTokenSupply = Token(token).totalSupply();
         uint256 amountTransferable = ((totalTransactions * amount_)/rewardTokenSupply); 
-        //Token(token).burn(msg.sender, amount_);
         assetRewards[asset_] -= amountTransferable;
         scopeToken.transfer(sender, amountTransferable);
     }
@@ -311,8 +299,4 @@ contract Platform is Ownable {
         int256 totalStake = int256(assetTotalStaked[asset_]);
         return totalStake/assetValue;
     }
-
-        // function balanceOf(address _sender) external returns(uint){
-        //     return 
-        // }
 }
